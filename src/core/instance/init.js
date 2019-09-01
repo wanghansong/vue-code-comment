@@ -13,6 +13,7 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
+  // 定义了_init函数
   Vue.prototype._init = function (options?: Object) {
     const vm: Component = this
     // a uid
@@ -20,7 +21,7 @@ export function initMixin (Vue: Class<Component>) {
 
     let startTag, endTag
     /* istanbul ignore if */
-    if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
+    if (process.env.NODE_ENV !== 'production' && config.performance && mark) { // 用于性能分析
       startTag = `vue-perf-start:${vm._uid}`
       endTag = `vue-perf-end:${vm._uid}`
       mark(startTag)

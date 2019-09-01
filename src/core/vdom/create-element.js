@@ -7,11 +7,11 @@ import { traverse } from '../observer/traverse'
 
 import {
   warn,
-  isDef,
+  isDef, // 是否非空
   isUndef,
   isTrue,
   isObject,
-  isPrimitive,
+  isPrimitive, // 检查数据是否是原始的基本类型：string、number、symbol、boolean
   resolveAsset
 } from '../util/index'
 
@@ -25,15 +25,18 @@ const ALWAYS_NORMALIZE = 2
 
 // wrapper function for providing a more flexible interface
 // without getting yelled at by flow
+/**
+ * 返回vnode或者vnode组件的数组数据
+ */
 export function createElement (
-  context: Component,
-  tag: any,
-  data: any,
-  children: any,
+  context: Component, // 上下文this
+  tag: any, // 标签
+  data: any, // vnode数据
+  children: any, // 子节点
   normalizationType: any,
   alwaysNormalize: boolean
 ): VNode | Array<VNode> {
-  if (Array.isArray(data) || isPrimitive(data)) {
+  if (Array.isArray(data) || isPrimitive(data)) { // 当vnode数据是数组或者基本类型的时候,对参数个数不一致的处理
     normalizationType = children
     children = data
     data = undefined
@@ -41,29 +44,29 @@ export function createElement (
   if (isTrue(alwaysNormalize)) {
     normalizationType = ALWAYS_NORMALIZE
   }
-  return _createElement(context, tag, data, children, normalizationType)
+  return _createElement(context, tag, data, children, normalizationType) // 真实调用
 }
 
 export function _createElement (
   context: Component,
-  tag?: string | Class<Component> | Function | Object,
-  data?: VNodeData,
-  children?: any,
-  normalizationType?: number
+  tag?: string | Class<Component> | Function | Object, // html标签
+  data?: VNodeData, // vnode数据
+  children?: any, // 子节点
+  normalizationType?: number // 子节点规范类型 1 2
 ): VNode | Array<VNode> {
-  if (isDef(data) && isDef((data: any).__ob__)) {
+  if (isDef(data) && isDef((data: any).__ob__)) { // 如果data是响应式的报警告
     process.env.NODE_ENV !== 'production' && warn(
       `Avoid using observed data object as vnode data: ${JSON.stringify(data)}\n` +
       'Always create fresh vnode data objects in each render!',
       context
     )
-    return createEmptyVNode()
+    return createEmptyVNode() // 生成一个注释节点
   }
   // object syntax in v-bind
   if (isDef(data) && isDef(data.is)) {
-    tag = data.is
+    tag = data.is // component is
   }
-  if (!tag) {
+  if (!tag) { // tag
     // in case of component :is set to falsy value
     return createEmptyVNode()
   }
@@ -87,16 +90,19 @@ export function _createElement (
     data.scopedSlots = { default: children[0] }
     children.length = 0
   }
-  if (normalizationType === ALWAYS_NORMALIZE) {
+  // 对children做规范化
+  if (normalizationType === ALWAYS_NORMALIZE) { // children下有多层嵌套，循环调用拍平成一个一维数组
     children = normalizeChildren(children)
-  } else if (normalizationType === SIMPLE_NORMALIZE) {
+  } else if (normalizationType === SIMPLE_NORMALIZE) { // 如果children下只有一层数组，将二维数组拍平成一个一维数组
     children = simpleNormalizeChildren(children)
   }
+
+  // 创建vnode
   let vnode, ns
   if (typeof tag === 'string') {
     let Ctor
     ns = (context.$vnode && context.$vnode.ns) || config.getTagNamespace(tag)
-    if (config.isReservedTag(tag)) {
+    if (config.isReservedTag(tag)) { // 是否是html原生的一些保留标签
       // platform built-in elements
       if (process.env.NODE_ENV !== 'production' && isDef(data) && isDef(data.nativeOn)) {
         warn(
