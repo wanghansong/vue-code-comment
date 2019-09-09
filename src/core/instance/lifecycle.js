@@ -29,24 +29,30 @@ export function setActiveInstance(vm: Component) {
   }
 }
 
+/**
+ * 作用：把当前组件配置挂到父组件上，初始化一些状态
+ * @export
+ * @param {Component} vm
+ */
 export function initLifecycle (vm: Component) {
   const options = vm.$options
 
   // locate first non-abstract parent
   let parent = options.parent
-  if (parent && !options.abstract) {
+  if (parent && !options.abstract) { // 当前组件是子组件
     while (parent.$options.abstract && parent.$parent) {
       parent = parent.$parent
     }
-    parent.$children.push(vm)
+    parent.$children.push(vm) // 把当前vm挂到父组件的$children中
   }
 
   vm.$parent = parent
-  vm.$root = parent ? parent.$root : vm
+  vm.$root = parent ? parent.$root : vm // $root是挂载的根元素
 
   vm.$children = []
   vm.$refs = {}
 
+  // 初始化状态s
   vm._watcher = null
   vm._inactive = null
   vm._directInactive = false
@@ -333,6 +339,12 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
   }
 }
 
+/**
+ *
+ * @export
+ * @param {Component} vm
+ * @param {string} hook 生命周期的名字，如 created
+ */
 export function callHook (vm: Component, hook: string) {
   // #7573 disable dep collection when invoking lifecycle hooks
   pushTarget()
@@ -340,7 +352,7 @@ export function callHook (vm: Component, hook: string) {
   const info = `${hook} hook`
   if (handlers) {
     for (let i = 0, j = handlers.length; i < j; i++) {
-      invokeWithErrorHandling(handlers[i], vm, null, vm, info)
+      invokeWithErrorHandling(handlers[i], vm, null, vm, info) // 运行钩子函数中的东西，如果出错则抛出
     }
   }
   if (vm._hasHookEvent) {

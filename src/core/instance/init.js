@@ -29,7 +29,7 @@ export function initMixin (Vue: Class<Component>) {
 
     // a flag to avoid this being observed
     vm._isVue = true
-    // merge options
+    // merge options 合并options
     if (options && options._isComponent) {
       // optimize internal component instantiation
       // since dynamic options merging is pretty slow, and none of the
@@ -50,12 +50,13 @@ export function initMixin (Vue: Class<Component>) {
     }
     // expose real self
     vm._self = vm
-    initLifecycle(vm)
+    initLifecycle(vm) // 作用：把当前组件配置挂到父组件上，初始化一些状态
     initEvents(vm)
     initRender(vm)
-    callHook(vm, 'beforeCreate')
+    callHook(vm, 'beforeCreate') // 初始化vue-router
+    // 在inject中default和该组件的父组件们的provide中找注入的变量的值， 如果没找到会一直往上找,如果找到了则把数据变成响应式的
     initInjections(vm) // resolve injections before data/props
-    initState(vm)
+    initState(vm) // 对 props, methods, data, computed 和 watch 进行初始化
     initProvide(vm) // resolve provide after data/props
     callHook(vm, 'created')
 

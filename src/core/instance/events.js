@@ -9,11 +9,17 @@ import {
 } from '../util/index'
 import { updateListeners } from '../vdom/helpers/index'
 
+/**
+ *
+ *
+ * @export
+ * @param {Component} vm
+ */
 export function initEvents (vm: Component) {
-  vm._events = Object.create(null)
+  vm._events = Object.create(null) // vm._events是当前组件$emit的事件
   vm._hasHookEvent = false
   // init parent attached events
-  const listeners = vm.$options._parentListeners
+  const listeners = vm.$options._parentListeners // 父组件中监听的事件
   if (listeners) {
     updateComponentListeners(vm, listeners)
   }

@@ -15,7 +15,7 @@ function Vue (options) {
   ) {
     warn('Vue is a constructor and should be called with the `new` keyword')
   }
-  this._init(options)
+  this._init(options) // 初始化vue的options，包括：性能埋点、合并options、初始化生命周期、事件、render、数据
 }
 
 initMixin(Vue) // 此处定义了_init函数
