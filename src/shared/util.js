@@ -160,6 +160,7 @@ export function cached<F: Function> (fn: F): F {
 
 /**
  * Camelize a hyphen-delimited string.
+ * 把test-case形式转成testCase驼峰形式
  */
 const camelizeRE = /-(\w)/g
 export const camelize = cached((str: string): string => {

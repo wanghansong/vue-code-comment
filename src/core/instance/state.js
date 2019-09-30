@@ -62,7 +62,7 @@ export function initState (vm: Component) {
   }
   if (opts.computed) initComputed(vm, opts.computed) // 初始化computed，
   if (opts.watch && opts.watch !== nativeWatch) { // nativeWatch是Firefox在Object.prototype上有一个原生的"watch"函数
-    initWatch(vm, opts.watch)
+    initWatch(vm, opts.watch) // 初始化watch
   }
 }
 
@@ -317,7 +317,7 @@ function initMethods (vm: Component, methods: Object) {
 function initWatch (vm: Component, watch: Object) {
   for (const key in watch) {
     const handler = watch[key]
-    if (Array.isArray(handler)) {
+    if (Array.isArray(handler)) { // watch中竟然还可以有函数数组,e: [ function handle1 (val, oldVal) { /* ... */ }, function handle2 (val, oldVal) { /* ... */ }]
       for (let i = 0; i < handler.length; i++) {
         createWatcher(vm, key, handler[i])
       }
@@ -327,17 +327,24 @@ function initWatch (vm: Component, watch: Object) {
   }
 }
 
+/**
+ * @param {Component} vm 组件实例
+ * @param {(string | Function)} expOrFn watcher的名字
+ * @param {*} handler watcher的value，可能是个对象，如 {handler(){}, deep: true,}，也可能是个函数，如 watch: {test(){}}，也可能是字符串代表methods
+ * @param {Object} [options]
+ * @returns
+ */
 function createWatcher (
   vm: Component,
   expOrFn: string | Function,
   handler: any,
   options?: Object
 ) {
-  if (isPlainObject(handler)) {
+  if (isPlainObject(handler)) { // 用户设置的watcher是否是个对象，如： dataA: {handler() {}}, 取handler作为回调函数
     options = handler
-    handler = handler.handler
+    handler = handler.handler // handler取watcher对象中的handler函数
   }
-  if (typeof handler === 'string') {
+  if (typeof handler === 'string') { // watch 有可能是之前定义过的 method，b: 'someMethod'
     handler = vm[handler]
   }
   return vm.$watch(expOrFn, handler, options)
@@ -369,6 +376,12 @@ export function stateMixin (Vue: Class<Component>) {
   Vue.prototype.$set = set
   Vue.prototype.$delete = del
 
+  /**
+   * expOrFn: watcher的名字
+   * cb: watcher要执行的函数
+   * options
+   * returns:
+   */
   Vue.prototype.$watch = function (
     expOrFn: string | Function,
     cb: any,
@@ -379,9 +392,9 @@ export function stateMixin (Vue: Class<Component>) {
       return createWatcher(vm, expOrFn, cb, options)
     }
     options = options || {}
-    options.user = true
-    const watcher = new Watcher(vm, expOrFn, cb, options)
-    if (options.immediate) {
+    options.user = true // user watcher
+    const watcher = new Watcher(vm, expOrFn, cb, options) // 实例化一个watcher
+    if (options.immediate) { // immediate
       try {
         cb.call(vm, watcher.value)
       } catch (error) {
@@ -389,7 +402,7 @@ export function stateMixin (Vue: Class<Component>) {
       }
     }
     return function unwatchFn () {
-      watcher.teardown()
+      watcher.teardown() // 移除watch
     }
   }
 }
