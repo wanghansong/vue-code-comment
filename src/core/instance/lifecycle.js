@@ -52,7 +52,7 @@ export function initLifecycle (vm: Component) {
   vm.$children = []
   vm.$refs = {}
 
-  // 初始化状态s
+  // 初始化状态
   vm._watcher = null
   vm._inactive = null
   vm._directInactive = false
@@ -340,15 +340,15 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
 }
 
 /**
- *
+ * 运行钩子函数
  * @export
  * @param {Component} vm
  * @param {string} hook 生命周期的名字，如 created
  */
 export function callHook (vm: Component, hook: string) {
   // #7573 disable dep collection when invoking lifecycle hooks
-  pushTarget()
-  const handlers = vm.$options[hook]
+  pushTarget() // 和订阅者Dep建立联系
+  const handlers = vm.$options[hook] // handlers是钩子函数，vue运行有多个相同的钩子存在
   const info = `${hook} hook`
   if (handlers) {
     for (let i = 0, j = handlers.length; i < j; i++) {

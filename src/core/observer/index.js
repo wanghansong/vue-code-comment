@@ -131,6 +131,11 @@ export function observe (value: any, asRootData: ?boolean): Observer | void {
 
 /**
  * Define a reactive property on an Object.
+ * @param {*} obj 要绑定到的目标对象
+ * @param {*} key 要设置成响应式的key
+ * @param {*} val 要设置成响应式key所对应的值
+ * @param {*} customSetter 
+ * @param {*} shallow 
  */
 export function defineReactive (
   obj: Object,

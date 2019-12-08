@@ -46,7 +46,7 @@ export function proxy (target: Object, sourceKey: string, key: string) {
 }
 
 /**
- * 对 props, methods, data, computed 和 watch 进行初始化
+ * 依次对 props, methods, data, computed 和 watch 进行初始化
  * @export
  * @param {Component} vm
  */
@@ -350,6 +350,10 @@ function createWatcher (
   return vm.$watch(expOrFn, handler, options)
 }
 
+/**
+ * 在prototype上挂载$data、$props、$set、$delete、$watch
+ * @param {*} Vue 
+ */
 export function stateMixin (Vue: Class<Component>) {
   // flow somehow has problems with directly declared definition object
   // when using Object.defineProperty, so we have to procedurally build up

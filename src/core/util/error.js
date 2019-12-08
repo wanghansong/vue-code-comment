@@ -33,6 +33,14 @@ export function handleError (err: Error, vm: any, info: string) {
   }
 }
 
+/**
+ * 运行钩子函数中的东
+ * @param {*} handler 钩子函数
+ * @param {*} context 运行环境
+ * @param {*} args 
+ * @param {*} vm 
+ * @param {*} info 
+ */
 export function invokeWithErrorHandling (
   handler: Function,
   context: any,
@@ -42,8 +50,8 @@ export function invokeWithErrorHandling (
 ) {
   let res
   try {
-    res = args ? handler.apply(context, args) : handler.call(context)
-    if (res && !res._isVue && isPromise(res) && !res._handled) {
+    res = args ? handler.apply(context, args) : handler.call(context) // 运行钩子函数
+    if (res && !res._isVue && isPromise(res) && !res._handled) { // 钩子函数是promise时, _handled表示已经运行过
       res.catch(e => handleError(e, vm, info + ` (Promise/async)`))
       // issue #9511
       // avoid catch triggering multiple times when nested calls

@@ -4,6 +4,10 @@ import { hasOwn } from 'shared/util'
 import { warn, hasSymbol } from '../util/index'
 import { defineReactive, toggleObserving } from '../observer/index'
 
+/**
+ * 把provide挂到vm._provided上
+ * @param {*} vm 
+ */
 export function initProvide (vm: Component) {
   const provide = vm.$options.provide
   if (provide) {
@@ -19,7 +23,7 @@ export function initProvide (vm: Component) {
  * @param {Component} vm
  */
 export function initInjections (vm: Component) {
-  // inject 选项应该是一个字符串数组或一个对象，该对象的 key 代表了本地绑定的名称，value 为其 key (字符串或 Symbol) 以在可用的注入中搜索。
+  // inject 选项应该是一个字符串数组或一个对象，该对象的 key 代表了本地绑定的名，value 为其 key (字符串或 Symbol) 以在可用的注入中搜索。
   const result = resolveInject(vm.$options.inject, vm) // vm.$options.inject是当前组件要注入的变量的key，如： inject: {from: 'test'},
   if (result) {
     toggleObserving(false)

@@ -6,6 +6,8 @@ import { isPlainObject, validateComponentName } from '../util/index'
 export function initAssetRegisters (Vue: GlobalAPI) {
   /**
    * Create asset registration methods.
+   * ASSET_TYPES: ['component','directive','filter']
+   * 将component、directive、filter挂到$options上，可参考 https://www.jb51.net/article/146210.htm
    */
   ASSET_TYPES.forEach(type => {
     Vue[type] = function (
@@ -21,7 +23,7 @@ export function initAssetRegisters (Vue: GlobalAPI) {
         }
         if (type === 'component' && isPlainObject(definition)) {
           definition.name = definition.name || id
-          definition = this.options._base.extend(definition)
+          definition = this.options._base.extend(definition) // this.options._base.extend就是Vue.extend
         }
         if (type === 'directive' && typeof definition === 'function') {
           definition = { bind: definition, update: definition }

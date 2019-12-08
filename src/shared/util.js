@@ -43,6 +43,7 @@ export function isObject (obj: mixed): boolean %checks {
 }
 
 /**
+ * 保存下来是为了防止toString被开发者重写
  * Get the raw type string of a value, e.g., [object Object].
  */
 const _toString = Object.prototype.toString
@@ -52,6 +53,9 @@ export function toRawType (value: any): string {
 }
 
 /**
+ * 判断一个对象是否事一个纯粹的对象
+ * "纯粹的对象"，就是通过 { }、new Object()、Object.create(null) 创建的对象
+ * 这个方法的作用是为了跟其他的 JavaScript对象如 null，数组，宿主对象（documents），DOM 等作区分，因为这些用 typeof 都会返回object
  * Strict object type check. Only returns true
  * for plain JavaScript objects.
  */

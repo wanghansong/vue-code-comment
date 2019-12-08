@@ -18,7 +18,7 @@ function Vue (options) {
   this._init(options) // 初始化vue的options，包括：性能埋点、合并options、初始化生命周期、事件、render、数据
 }
 
-initMixin(Vue) // 此处定义了_init函数
+initMixin(Vue) // 定义了_init函数,初始化vue的options，包括：性能埋点、合并options、初始化生命周期、事件、render、数据
 stateMixin(Vue)
 eventsMixin(Vue)
 lifecycleMixin(Vue)

@@ -10,8 +10,8 @@ import {
 import { updateListeners } from '../vdom/helpers/index'
 
 /**
- *
- *
+ * 子组件拿到父组件的监听列表，更新监听列表，子组件自己监听这些事件
+ * 可参考：https://segmentfault.com/a/1190000013579903
  * @export
  * @param {Component} vm
  */
@@ -19,7 +19,7 @@ export function initEvents (vm: Component) {
   vm._events = Object.create(null) // vm._events是当前组件$emit的事件
   vm._hasHookEvent = false
   // init parent attached events
-  const listeners = vm.$options._parentListeners // 父组件中监听的事件
+  const listeners = vm.$options._parentListeners // 父组件中监听的事件 @myFcun
   if (listeners) {
     updateComponentListeners(vm, listeners)
   }
