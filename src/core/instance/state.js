@@ -328,9 +328,10 @@ function initWatch (vm: Component, watch: Object) {
 }
 
 /**
+ * 将watcher的配置剥离出来，重新生成watcher
  * @param {Component} vm 组件实例
  * @param {(string | Function)} expOrFn watcher的名字
- * @param {*} handler watcher的value，可能是个对象，如 {handler(){}, deep: true,}，也可能是个函数，如 watch: {test(){}}，也可能是字符串代表methods
+ * @param {*} handler watcher的value，可能是个对象，如 {handler(){}, deep: true,}，也可能是个函数，如 watch: {test(){}}，也可能是字符串代表另一个watcher
  * @param {Object} [options]
  * @returns
  */
@@ -381,8 +382,10 @@ export function stateMixin (Vue: Class<Component>) {
   Vue.prototype.$delete = del
 
   /**
-   * expOrFn: watcher的名字
-   * cb: watcher要执行的函数
+   * 功能：创建$watcher方法并挂载到vue原型上,该方法可以创建一个watcher和关闭它
+   * $watch返回一个函数，执行该函数可以取消watch
+   * expOrFn: watcher的名字key
+   * cb: watcher的value
    * options
    * returns:
    */
@@ -392,7 +395,7 @@ export function stateMixin (Vue: Class<Component>) {
     options?: Object
   ): Function {
     const vm: Component = this
-    if (isPlainObject(cb)) {
+    if (isPlainObject(cb)) { // 回调函数数个对象
       return createWatcher(vm, expOrFn, cb, options)
     }
     options = options || {}

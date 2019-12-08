@@ -34,12 +34,12 @@ export function handleError (err: Error, vm: any, info: string) {
 }
 
 /**
- * 运行钩子函数中的东
- * @param {*} handler 钩子函数
- * @param {*} context 运行环境
- * @param {*} args 
- * @param {*} vm 
- * @param {*} info 
+ * 运行钩子函数中的东西,有错误捕获
+ * @param {*} handler 钩子函数，回调函数
+ * @param {*} context 运行环境this
+ * @param {*} args 回调函数的参数
+ * @param {*} vm vue实例
+ * @param {*} info 来源注释说明
  */
 export function invokeWithErrorHandling (
   handler: Function,

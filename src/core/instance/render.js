@@ -63,6 +63,11 @@ export function setCurrentRenderingInstance (vm: Component) {
   currentRenderingInstance = vm
 }
 
+/**
+ * 功能：在Vue.prototype上定义$nextTick、_render
+ * @export
+ * @param {Class<Component>} Vue
+ */
 export function renderMixin (Vue: Class<Component>) {
   // install runtime convenience helpers
   installRenderHelpers(Vue.prototype)
@@ -71,6 +76,7 @@ export function renderMixin (Vue: Class<Component>) {
     return nextTick(fn, this)
   }
 
+  // render函数来自options，然后返回了vnode
   Vue.prototype._render = function (): VNode {
     const vm: Component = this
     const { render, _parentVnode } = vm.$options
@@ -93,7 +99,8 @@ export function renderMixin (Vue: Class<Component>) {
       // separately from one another. Nested component's render fns are called
       // when parent component is patched.
       currentRenderingInstance = vm
-      vnode = render.call(vm._renderProxy, vm.$createElement)
+      // render函数来自options，然后返回了vnode
+      vnode = render.call(vm._renderProxy, vm.$createElement) //  // vm._renderProxy我们直接当成vm，其实就是为了开发环境报warning用的
     } catch (e) {
       handleError(e, vm, `render`)
       // return error render result,

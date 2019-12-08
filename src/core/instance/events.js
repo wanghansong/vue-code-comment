@@ -55,8 +55,13 @@ export function updateComponentListeners (
   target = undefined
 }
 
+/**
+ * Vue.prototype上定义$on $once $off $emit方法
+ * @param {*} Vue 
+ */
 export function eventsMixin (Vue: Class<Component>) {
   const hookRE = /^hook:/
+  // 把事件对应的回调push到vm._events对应事件中去
   Vue.prototype.$on = function (event: string | Array<string>, fn: Function): Component {
     const vm: Component = this
     if (Array.isArray(event)) {
@@ -77,14 +82,15 @@ export function eventsMixin (Vue: Class<Component>) {
   Vue.prototype.$once = function (event: string, fn: Function): Component {
     const vm: Component = this
     function on () {
-      vm.$off(event, on)
-      fn.apply(vm, arguments)
+      vm.$off(event, on) // 销毁监听
+      fn.apply(vm, arguments) // 执行销毁前监听事件的回调
     }
     on.fn = fn
-    vm.$on(event, on)
+    vm.$on(event, on) // 执行依次就销毁监听事件
     return vm
   }
 
+  // 把vm._events上对应的事件删除  
   Vue.prototype.$off = function (event?: string | Array<string>, fn?: Function): Component {
     const vm: Component = this
     // all
@@ -120,7 +126,8 @@ export function eventsMixin (Vue: Class<Component>) {
     }
     return vm
   }
-
+  
+  // 执行事件的回调
   Vue.prototype.$emit = function (event: string): Component {
     const vm: Component = this
     if (process.env.NODE_ENV !== 'production') {
@@ -141,7 +148,7 @@ export function eventsMixin (Vue: Class<Component>) {
       const args = toArray(arguments, 1)
       const info = `event handler for "${event}"`
       for (let i = 0, l = cbs.length; i < l; i++) {
-        invokeWithErrorHandling(cbs[i], vm, args, vm, info)
+        invokeWithErrorHandling(cbs[i], vm, args, vm, info) // 执行事件的回调函数
       }
     }
     return vm

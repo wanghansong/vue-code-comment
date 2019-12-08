@@ -164,8 +164,8 @@ export function defineReactive (
     configurable: true,
     get: function reactiveGetter () {
       const value = getter ? getter.call(obj) : val
-      if (Dep.target) {
-        dep.depend()
+      if (Dep.target) { // 只有watcher才有target，每次只有一个watcher在执行
+        dep.depend() // 将watcher加入订阅者
         if (childOb) {
           childOb.dep.depend()
           if (Array.isArray(value)) {

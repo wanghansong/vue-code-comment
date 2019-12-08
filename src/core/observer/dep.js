@@ -52,7 +52,7 @@ export default class Dep {
 // The current target watcher being evaluated.
 // This is globally unique because only one watcher
 // can be evaluated at a time.
-Dep.target = null
+Dep.target = null // 只有watcher的时候才有target,每次只有一个watcher在执行
 const targetStack = []
 
 export function pushTarget (target: ?Watcher) {

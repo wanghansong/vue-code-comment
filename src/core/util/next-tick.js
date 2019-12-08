@@ -84,8 +84,10 @@ if (typeof Promise !== 'undefined' && isNative(Promise)) {
   }
 }
 
+// Promise实现nextTick
 export function nextTick (cb?: Function, ctx?: Object) {
   let _resolve
+  // 先把回调函数封装进一个执行函数放到callbacks数组中
   callbacks.push(() => {
     if (cb) {
       try {
@@ -93,7 +95,7 @@ export function nextTick (cb?: Function, ctx?: Object) {
       } catch (e) {
         handleError(e, ctx, 'nextTick')
       }
-    } else if (_resolve) {
+    } else if (_resolve) { // promise异步执行完
       _resolve(ctx)
     }
   })

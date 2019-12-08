@@ -99,11 +99,11 @@ export default class Watcher {
    * Evaluate the getter, and re-collect dependencies.
    */
   get () {
-    pushTarget(this)
+    pushTarget(this) // Dep.target = 该Watcher实例,用于在getter中判断是否是由watcher引起的,决定是否执行addSub
     let value
     const vm = this.vm
     try {
-      value = this.getter.call(vm, vm)
+      value = this.getter.call(vm, vm) // 触发getter
     } catch (e) {
       if (this.user) {
         handleError(e, vm, `getter for watcher "${this.expression}"`)
@@ -113,7 +113,7 @@ export default class Watcher {
     } finally {
       // "touch" every property so they are all tracked as
       // dependencies for deep watching
-      if (this.deep) {
+      if (this.deep) { // deep: true
         traverse(value)
       }
       popTarget()
@@ -158,6 +158,7 @@ export default class Watcher {
   }
 
   /**
+   * 通知订阅者
    * Subscriber interface.
    * Will be called when a dependency changes.
    */
@@ -173,12 +174,13 @@ export default class Watcher {
   }
 
   /**
+   * 运行watcher的回调
    * Scheduler job interface.
    * Will be called by the scheduler.
    */
   run () {
     if (this.active) {
-      const value = this.get()
+      const value = this.get() // newVal
       if (
         value !== this.value ||
         // Deep watchers and watchers on Object/Arrays should fire even
@@ -213,6 +215,7 @@ export default class Watcher {
   }
 
   /**
+   * 订阅依赖
    * Depend on all deps collected by this watcher.
    */
   depend () {
@@ -223,6 +226,7 @@ export default class Watcher {
   }
 
   /**
+   * 取消订阅
    * Remove self from all dependencies' subscriber list.
    */
   teardown () {
